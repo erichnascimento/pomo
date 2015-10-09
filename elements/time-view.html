@@ -1,0 +1,55 @@
+<dom-module id="time-view">
+  <style>
+    :host {
+      display: block;
+      font-size: 20vw;
+      font-family: "Courier New" monospace;
+
+    }
+  </style>
+  <template>
+    <p>{{currentTimeStr}}</p>
+  </template>
+
+  <script>
+    const MINUTES = 60;
+
+    function sec2Min(seconds) {
+      return Math.floor(seconds / MINUTES);
+    }
+
+    function secSec(seconds) {
+      return seconds % MINUTES;
+    }
+
+    function fmtTime(time, size) {
+      return time >= 10
+        ? time.toString()
+        : '0' + time.toString()
+    }
+
+    Polymer({
+      is: "time-view",
+      properties: {
+        currentTime: {
+          type: Number,
+          value: 0
+        },
+        currentTimeStr: {
+          type: String,
+          computed: 'computeCurrentTimeStr(currentTime)'
+        }
+      },
+      ready: function() {
+        //this.textContent = "I'm a element"
+
+      },
+
+      computeCurrentTimeStr: function(currentTime) {
+        return fmtTime(sec2Min(currentTime))
+          + ':'
+          + fmtTime(secSec(currentTime)) ;
+      }
+    });
+  </script>
+</dom-module>

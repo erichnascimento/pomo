@@ -1,0 +1,27 @@
+<script>
+  Polymer({
+    is: 'sec-countdown',
+    properties: {
+      currentTime: {
+        type: Number,
+        value: 0,
+        notify: true
+      }
+    },
+    start: function() {
+      this._interval = setInterval(this.updateTime.bind(this), 1000);
+    },
+    pause: function() {
+      if (!this._interval) {
+        return;
+      }
+      clearInterval(this._interval);
+    },
+    updateTime: function() {
+      if (this.currentTime == 0) {
+        return;
+      }
+      this.currentTime = this.currentTime - 1;
+    }
+  });
+</script>

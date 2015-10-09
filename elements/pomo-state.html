@@ -1,0 +1,70 @@
+<dom-module id="pomo-state">
+  <style>
+    :host {
+      display: block;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    ul li {
+      display: inline-block;
+      padding: 0 1em;
+      background-color: #CCC;
+    }
+
+    :host.pm #pomo {
+      background-color: red;
+    }
+
+    :host.sb #short {
+      background-color: orange;
+    }
+
+    :host.lb #long {
+      background-color: green;
+    }
+
+    .pomodoro {
+      background-color: red;
+    }
+
+    .blink {
+      animation: blink 1s steps(5, start) infinite;
+    }
+
+    @keyframes blink {
+      to {
+        visibility: hidden;
+      }
+    }
+
+  </style>
+  <template>
+    <ul>
+      <li id="pomo">PM</li>
+      <li id="short">SB</li>
+      <li id="long">LB</li>
+    </ul>
+  </template>
+  <script>
+    Polymer({
+      is: 'pomo-state',
+
+      properties: {
+        state: {
+          type: String,
+          value: '',
+          observer: '_stateChanged'
+        }
+      },
+
+      _stateChanged: function(newValue, oldValue) {
+          this.toggleClass('pm', newValue == 'p');
+          this.toggleClass('sb', newValue == 's');
+          this.toggleClass('lb', newValue == 'l');
+      }
+    });
+  </script>
+</dom-module>

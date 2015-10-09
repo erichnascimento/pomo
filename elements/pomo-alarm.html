@@ -1,0 +1,25 @@
+<script>
+  Polymer({
+    is: 'pomo-alarm',
+    properties: {
+      time: {
+        type: Number,
+        value: 0
+      },
+      alarm: {
+        type: Number,
+        value: 0
+      }
+    },
+
+    observers: [
+      'checkAlarm(time, alarm)'
+    ],
+
+    checkAlarm: function(time, alarm) {
+      if (time <= alarm) {
+        this.fire('alarm', {time: time});
+      }
+    }
+  });
+</script>

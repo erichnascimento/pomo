@@ -1,0 +1,133 @@
+<dom-module id="pomo-app">
+  <style>
+    :host {
+      display: block;
+    }
+
+    time-view {
+      padding: 20px;
+    }
+  </style>
+  <template>
+    <pomo-state id="pomoState" state="[[activeTime.type]]"></pomo-state>
+    <time-view current-time="[[activeTime.remain]]"></time-view>
+    <pomo-control on-play="play" on-pause="pause" on-stop="stop" on-next="next"></pomo-control>
+
+    <sec-countdown id="countdown" current-time="{{activeTime.remain}}"></sec-countdown>
+    <pomo-alarm id="alarm"
+                time="[[activeTime.remain]]"
+                alarm="0"
+                on-alarm="handleAlarm">
+    </pomo-alarm>
+    <audio id="audioPlayer" src="../audio/stop.mp3"></audio>
+
+  </template>
+
+  <script>
+    "use strict";
+
+    var pomodoroCounting = 0;
+
+    Polymer({
+      is: 'pomo-app',
+      properties: {
+        pomodoroDuration: {
+          type: Number,
+          value: 5 //25 * 60
+        },
+
+        shortBreakDuration: {
+          type: Number,
+          value: 5 * 60
+        },
+
+        longBreakDuration: {
+          type: Number,
+          value: 15 * 60
+        },
+
+        longBreakInterval: {
+          type: Number,
+          value: 4
+        },
+
+        /**
+         * Tempo atual
+         */
+        activeTime: {
+          type: Object,
+          value: null,
+          observer: '_activeTimeChanged'
+        },
+
+      },
+      ready: function() {
+        console.log('ready');
+        this.init();
+      },
+      play: function() {
+        console.log('play');
+        this.$.countdown.start();
+      },
+      stop: function() {
+        console.log('stop')
+      },
+      pause: function() {
+        console.log('pause');
+      },
+      next: function(finished) {
+        console.log(next);
+        var next;
+        switch (this.activeTime.type) {
+          case 'p':
+            if (finished) {
+              pomodoroCounting++;
+            }
+            if (pomodoroCounting >= this.longBreakInterval) {
+              pomodoroCounting = 0;
+              next = this._createNewBreak('l');
+            } else {
+              next = this._createNewBreak('s');
+            }
+            break;
+          case 's':
+          case 'l':
+            next = this._createNewPomodoro();
+        }
+
+        this.activeTime = next;
+      },
+      init: function() {
+        this.activeTime = this._createNewPomodoro(1);
+      },
+      _createNewBreak: function(type) {
+        var result = {};
+        result.type = type;
+        result.duration = (type == 's'
+          ? this.shortBreakDuration
+          : this.longBreakDuration);
+        result.remain = result.duration;
+
+        return result;
+      },
+      _createNewPomodoro: function() {
+        var result = {};
+        result.type = 'p';
+        result.duration = this.pomodoroDuration;
+        result.remain = result.duration;
+
+        return result;
+      },
+      handleAlarm: function(e) {
+        console.log('Alarm:', e);
+        this.$.audioPlayer.play();
+        this.next(true);
+      },
+
+      _activeTimeChanged: function(newValue, oldValue) {
+        console.log('State changed: ', newValue);
+      }
+
+    });
+  </script>
+</dom-module>
