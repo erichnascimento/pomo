@@ -11,10 +11,7 @@
     start: function() {
       this._interval = setInterval(this.updateTime.bind(this), 1000);
     },
-    pause: function() {
-      if (!this._interval) {
-        return;
-      }
+    stop: function() {
       clearInterval(this._interval);
     },
     updateTime: function() {

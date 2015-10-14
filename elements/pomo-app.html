@@ -85,10 +85,13 @@
         this.$.countdown.start();
       },
       stop: function() {
-        console.log('stop')
+        console.log('stop');
+        this.$.countdown.stop();
+        this.init();
       },
       pause: function() {
         console.log('pause');
+        this.$.countdown.stop();
       },
       next: function(finished) {
         console.log(next);
