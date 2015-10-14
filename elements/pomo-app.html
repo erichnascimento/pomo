@@ -4,6 +4,18 @@
       display: block;
     }
 
+    :host.pm {
+      background-color: #ffa3b6;
+    }
+
+    :host.sb {
+      background-color: #93e8ff;
+    }
+
+    :host.lb {
+      background-color: #c0ff77;
+    }
+
     time-view {
       padding: 20px;
     }
@@ -61,6 +73,9 @@
         },
 
       },
+      observers:[
+        '_updateState(activeTime.type)'
+      ],
       ready: function() {
         console.log('ready');
         this.init();
@@ -126,6 +141,12 @@
 
       _activeTimeChanged: function(newValue, oldValue) {
         console.log('State changed: ', newValue);
+      },
+
+      _updateState: function(type) {
+        this.toggleClass('pm', type == 'p');
+        this.toggleClass('sb', type == 's');
+        this.toggleClass('lb', type == 'l');
       }
 
     });
