@@ -21,10 +21,16 @@
     }
   </style>
   <template>
-    <pomo-state id="pomoState" state="[[activeTime.type]]"></pomo-state>
-    <time-view current-time="[[activeTime.remain]]"></time-view>
-    <pomo-control on-play="play" on-pause="pause" on-stop="stop" on-next="next"></pomo-control>
-
+    <div class="fit horizontal layout">
+      <div class="flex self-center">
+        <div class="flex vertical layout center">
+          <pomo-state id="pomoState" state="[[activeTime.type]]"></pomo-state>
+          <time-view current-time="[[activeTime.remain]]"></time-view>
+          <pomo-control on-play="play" on-pause="pause" on-stop="stop" on-next="next"></pomo-control>
+        </div>
+      </div>
+    </div>
+    <!-- Declarations -->
     <sec-countdown id="countdown" current-time="{{activeTime.remain}}"></sec-countdown>
     <pomo-alarm id="alarm"
                 time="[[activeTime.remain]]"
