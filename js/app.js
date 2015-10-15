@@ -17,15 +17,25 @@ function getArg(argname, defaultValue) {
 
 function initialize() {
   var app = document.getElementById('pomoApp');
-  app.setAttribute('pomodoro-duration',
-    getArg('pm', app.getAttribute('pomodoro-duration')));
+  var attrValue = null;
 
-  app.setAttribute('short-break-duration',
-    getArg('sb', app.getAttribute('short-break-duration')));
-  app.setAttribute('long-break-duration', getArg('lb',
-    app.getAttribute('long-break-duration')));
-  app.setAttribute('long-break-interval', getArg('lbi',
-    app.getAttribute('long-break-interval')));
+  if (attrValue = getArg('pm', null)) {
+    app.setAttribute('pomodoro-duration', attrValue);
+  }
+
+  if (attrValue = getArg('sb', null)) {
+    app.setAttribute('short-break-duration', attrValue);
+  }
+
+  if (attrValue = getArg('lb', null)) {
+    app.setAttribute('long-break-duration', attrValue);
+  }
+
+  if (attrValue = getArg('lbi', null)) {
+    app.setAttribute('long-break-interval', attrValue);
+  }
+  
+  console.log(app.getAttribute('long-break-interval'));
 
   app.init();
   //app.start();
