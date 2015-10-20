@@ -3,16 +3,26 @@
     :host {
       display: block;
       font-family: "Courier New" monospace;
+      font-size: 3vw;
     }
 
     ul {
       list-style: none;
+      margin: 0;
+      padding: 0;
     }
 
     ul li {
       display: inline-block;
       padding: .4em;
-      background-color: #CCC;
+      background-color: #383838;
+      border-radius: 50%;
+      color: #DADADA;
+    }
+
+    ul li.active {
+      color: #FFF;
+      font-weight: bold;
     }
 
     :host.pm #pomo {
@@ -20,15 +30,11 @@
     }
 
     :host.sb #short {
-      background-color: orange;
+      background-color: #004EFF;
     }
 
     :host.lb #long {
       background-color: green;
-    }
-
-    .pomodoro {
-      background-color: red;
     }
 
     .blink {
@@ -65,6 +71,10 @@
           this.toggleClass('pm', newValue == 'p');
           this.toggleClass('sb', newValue == 's');
           this.toggleClass('lb', newValue == 'l');
+
+          this.toggleClass('active', newValue == 'p', this.$.pomo);
+          this.toggleClass('active', newValue == 's', this.$.short);
+          this.toggleClass('active', newValue == 'l', this.$.long);
       }
     });
   </script>
