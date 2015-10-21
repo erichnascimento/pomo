@@ -34,10 +34,10 @@
     </div>
     <!-- Declarations -->
     <sec-countdown id="countdown" current-time="{{activeTime.remain}}"></sec-countdown>
-    <pomo-alarm id="alarm"
+    <pomo-alarm id="timeoutAlarm"
                 time="[[activeTime.remain]]"
                 alarm="0"
-                on-alarm="handleAlarm">
+                on-alarm="_handleTimeoutAlarm">
     </pomo-alarm>
     <audio id="audioPlayer" src="../audio/stop.mp3"></audio>
 
@@ -46,6 +46,20 @@
   <script>
     "use strict";
 
+    const MINUTE = 60;
+
+    const STATE_POMODORO    = 'p';
+    const STATE_SHORT_BREAK = 's';
+    const STATE_LONG_BREAK  = 'l';
+
+    class State {
+      constructor(type, duration) {
+        this.type = type;
+        this.duration = duration;
+        this.remain = duration;
+      }
+    }
+
     var pomodoroCounting = 0;
 
     Polymer({
@@ -53,17 +67,17 @@
       properties: {
         pomodoroDuration: {
           type: Number,
-          value: 25 * 60
+          value: 25 * MINUTE
         },
 
         shortBreakDuration: {
           type: Number,
-          value: 5 * 60
+          value: 5 * MINUTE
         },
 
         longBreakDuration: {
           type: Number,
-          value: 15 * 60
+          value: 15 * MINUTE
         },
 
         longBreakInterval: {
@@ -73,84 +87,56 @@
 
         activeTime: {
           type: Object,
-          value: null,
-          observer: '_activeTimeChanged'
-        },
-
+          value: null
+        }
       },
-      observers:[
-        '_updateState(activeTime.type)'
-      ],
+
       ready: function() {
         this.init();
       },
+
       play: function() {
         this.$.countdown.start();
       },
+
       stop: function() {
         this.$.countdown.stop();
         this.init();
       },
+
       pause: function() {
         this.$.countdown.stop();
       },
+
       next: function(finished) {
-        var next;
-        switch (this.activeTime.type) {
-          case 'p':
-            if (finished) {
-              pomodoroCounting++;
-            }
-            if (pomodoroCounting >= this.longBreakInterval) {
-              pomodoroCounting = 0;
-              next = this._createNewBreak('l');
-            } else {
-              next = this._createNewBreak('s');
-            }
-            break;
-          case 's':
-          case 'l':
-            next = this._createNewPomodoro();
+        if (this.activeTime.type != STATE_POMODORO) {
+          return this.activeTime = new State(STATE_POMODORO,
+            this.pomodoroDuration);
         }
 
-        this.activeTime = next;
+        if (finished) {
+          pomodoroCounting++;
+        }
+
+        if (pomodoroCounting >= this.longBreakInterval) {
+          pomodoroCounting = 0;
+          return this.activeTime = new State(STATE_LONG_BREAK,
+            this.longBreakDuration);
+        }
+
+        return this.activeTime = new State(STATE_SHORT_BREAK,
+          this.shortBreakDuration);
       },
+
       init: function() {
-        this.activeTime = this._createNewPomodoro();
+        pomodoroCounting = 0;
+        this.activeTime = new State(STATE_POMODORO, this.pomodoroDuration);
       },
-      _createNewBreak: function(type) {
-        var result = {};
-        result.type = type;
-        result.duration = (type == 's'
-          ? this.shortBreakDuration
-          : this.longBreakDuration);
-        result.remain = result.duration;
 
-        return result;
-      },
-      _createNewPomodoro: function() {
-        var result = {};
-        result.type = 'p';
-        result.duration = this.pomodoroDuration;
-        result.remain = result.duration;
-
-        return result;
-      },
-      handleAlarm: function(e) {
+      _handleTimeoutAlarm: function(e) {
         this.$.audioPlayer.play();
         this.next(true);
-      },
-
-      _activeTimeChanged: function(newValue, oldValue) {
-        // nope
-      },
-
-      _updateState: function(type) {
-        /*this.toggleClass('pm', type == 'p');
-        this.toggleClass('sb', type == 's');
-        this.toggleClass('lb', type == 'l');*/
       }
-
     });
   </script>
 </dom-module>
