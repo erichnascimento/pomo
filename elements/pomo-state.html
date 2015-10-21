@@ -35,12 +35,22 @@
     .active.l {
       background-color: green;
     }
+
+    div {
+      padding: .6em;
+    }
+
+    paper-badge::shadow #badge.paper-badge {
+      width: 2em;
+      height: 2em;
+      font-size: .8em;
+    }
   </style>
   <template>
     <ul>
-      <li class$="{{_activeColor(state, 'p')}}">PM</li>
-      <li class$="{{_activeColor(state, 's')}}">SB</li>
-      <li class$="{{_activeColor(state, 'l')}}">LB</li>
+      <li class$="{{_activeColor(state, 'p')}}"><div>PM<paper-badge label="[[pomodoroCounting]]"></paper-badge></div></li>
+      <li class$="{{_activeColor(state, 's')}}"><div>SB</div></li>
+      <li class$="{{_activeColor(state, 'l')}}"><div>LB</div></li>
     </ul>
   </template>
   <script>
@@ -51,6 +61,10 @@
         state: {
           type: String,
           value: ''
+        },
+        pomodoroCounting: {
+          type: Number,
+          value: 0
         }
       },
 
