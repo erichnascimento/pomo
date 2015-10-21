@@ -53,7 +53,7 @@
       properties: {
         pomodoroDuration: {
           type: Number,
-          value: 5 //25 * 60
+          value: 25 * 60
         },
 
         shortBreakDuration: {
@@ -71,9 +71,6 @@
           value: 4
         },
 
-        /**
-         * Tempo atual
-         */
         activeTime: {
           type: Object,
           value: null,
@@ -85,24 +82,19 @@
         '_updateState(activeTime.type)'
       ],
       ready: function() {
-        console.log('ready');
         this.init();
       },
       play: function() {
-        console.log('play');
         this.$.countdown.start();
       },
       stop: function() {
-        console.log('stop');
         this.$.countdown.stop();
         this.init();
       },
       pause: function() {
-        console.log('pause');
         this.$.countdown.stop();
       },
       next: function(finished) {
-        console.log(next);
         var next;
         switch (this.activeTime.type) {
           case 'p':
@@ -124,7 +116,7 @@
         this.activeTime = next;
       },
       init: function() {
-        this.activeTime = this._createNewPomodoro(1);
+        this.activeTime = this._createNewPomodoro();
       },
       _createNewBreak: function(type) {
         var result = {};
@@ -145,13 +137,12 @@
         return result;
       },
       handleAlarm: function(e) {
-        console.log('Alarm:', e);
         this.$.audioPlayer.play();
         this.next(true);
       },
 
       _activeTimeChanged: function(newValue, oldValue) {
-        console.log('State changed: ', newValue);
+        // nope
       },
 
       _updateState: function(type) {
