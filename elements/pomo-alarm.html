@@ -9,6 +9,10 @@
       alarm: {
         type: Number,
         value: 0
+      },
+      intermitent: {
+        type: Boolean,
+        value: false
       }
     },
 
@@ -16,8 +20,14 @@
       'checkAlarm(time, alarm)'
     ],
 
+    _alarmDispetched: false,
+
     checkAlarm: function(time, alarm) {
+      if (this._alarmDispetched && !this.intermitent)
+        return;
+
       if (time <= alarm) {
+        this._alarmDispetched = true;
         this.fire('alarm', {time: time});
       }
     }
