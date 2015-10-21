@@ -11,7 +11,7 @@
       padding: 0;
     }
 
-    ul li {
+    li {
       display: inline-block;
       padding: .4em;
       background-color: #383838;
@@ -19,20 +19,20 @@
       color: #DADADA;
     }
 
-    ul li.active {
+    .active {
       color: #FFF;
       font-weight: bold;
     }
 
-    :host.pm #pomo {
+    .active.p {
       background-color: red;
     }
 
-    :host.sb #short {
+    .active.s {
       background-color: #004EFF;
     }
 
-    :host.lb #long {
+    .active.l {
       background-color: green;
     }
 
@@ -49,9 +49,9 @@
   </style>
   <template>
     <ul>
-      <li id="pomo">PM</li>
-      <li id="short">SB</li>
-      <li id="long">LB</li>
+      <li class$="{{_activeColor(state, 'p')}}">PM</li>
+      <li class$="{{_activeColor(state, 's')}}">SB</li>
+      <li class$="{{_activeColor(state, 'l')}}">LB</li>
     </ul>
   </template>
   <script>
@@ -61,19 +61,14 @@
       properties: {
         state: {
           type: String,
-          value: '',
-          observer: '_stateChanged'
+          value: ''
         }
       },
 
-      _stateChanged: function(newValue, oldValue) {
-          this.toggleClass('pm', newValue == 'p');
-          this.toggleClass('sb', newValue == 's');
-          this.toggleClass('lb', newValue == 'l');
-
-          this.toggleClass('active', newValue == 'p', this.$.pomo);
-          this.toggleClass('active', newValue == 's', this.$.short);
-          this.toggleClass('active', newValue == 'l', this.$.long);
+      _activeColor: function(state, ref) {
+        return state == ref
+          ? state + ' active'
+          : state;
       }
     });
   </script>
