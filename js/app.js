@@ -34,12 +34,8 @@ function initialize() {
   if (attrValue = getArg('lbi', null)) {
     app.setAttribute('long-break-interval', attrValue);
   }
-  
-  console.log(app.getAttribute('long-break-interval'));
 
   app.init();
-  //app.start();
-  //setInterval(function(){app.next()}, 3000);
 }
 
 window.addEventListener('DOMContentLoaded', function() {
