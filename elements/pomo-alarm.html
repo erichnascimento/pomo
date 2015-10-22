@@ -10,9 +10,11 @@
         type: Number,
         value: 0
       },
-      intermitent: {
+      isTriggered: {
         type: Boolean,
-        value: false
+        value: false,
+        readOnly: true,
+        notify: true
       }
     },
 
@@ -20,15 +22,18 @@
       'checkAlarm(time, alarm)'
     ],
 
-    _alarmDispetched: false,
-
     checkAlarm: function(time, alarm) {
-      if (this._alarmDispetched && !this.intermitent)
-        return;
-
       if (time <= alarm) {
-        this._alarmDispetched = true;
+        if (this.isTriggered) {
+          return;
+        }
         this.fire('alarm', {time: time});
+        this._setIsTriggered(true);
+        return;
+      }
+
+      if (this.isTriggered) {
+        this._setIsTriggered(false);
       }
     }
   });
