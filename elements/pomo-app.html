@@ -21,13 +21,14 @@
     time-view {
       padding: 20px;
     }
+
   </style>
   <template>
     <div class="fit horizontal layout">
       <div class="flex self-center">
         <div class="flex vertical layout center">
           <pomo-state id="pomoState" state="[[activeTime.type]]" pomodoro-counting="[[completedPomodoros]]"></pomo-state>
-          <time-view current-time="[[activeTime.remain]]"></time-view>
+          <time-view id="timeView" current-time="[[activeTime.remain]]" is-blink="[[_isBlink]]"></time-view>
           <pomo-control on-play="play" on-pause="pause" on-stop="stop" on-next="next"></pomo-control>
         </div>
       </div>
@@ -37,8 +38,10 @@
     <pomo-alarm id="timeoutAlarm"
                 time="[[activeTime.remain]]"
                 alarm="0"
-                on-alarm="_handleTimeoutAlarm">
-    </pomo-alarm>
+                on-alarm="_handleTimeoutAlarm"></pomo-alarm>-
+    <pomo-alarm id="warnAlarm"
+                time="[[activeTime.remain]]"
+                alarm="10" is-triggered="{{_isBlink}}"></pomo-alarm>
     <audio id="audioPlayer" src="../audio/stop.mp3"></audio>
 
   </template>
@@ -94,6 +97,11 @@
           type: Number,
           value: 0,
           readOnly: true
+        },
+
+        _isBlink: {
+          type: Boolean,
+          value: false
         }
       },
 
@@ -140,8 +148,12 @@
       },
 
       _handleTimeoutAlarm: function(e) {
+        // Wait 1 second before change. Thank you Ana Paula Morais do Nascimento ;)
+        this.async(function() {
+          //this.setWarnMode(false);
+          this.next(true);
+        }, 1000);
         this.$.audioPlayer.play();
-        this.next(true);
       }
     });
   </script>
