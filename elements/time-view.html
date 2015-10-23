@@ -1,0 +1,94 @@
+<dom-module id="time-view">
+  <style>
+    :host {
+      display: block;
+      font-size: 20vw;
+      font-weight: bold;
+      color: #D6D6D6;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .blink {
+      animation: blink 1s steps(5, start) infinite;
+    }
+
+    .warn {
+      color: orange;
+    }
+
+    @keyframes blink {
+      to {
+        visibility: hidden;
+      }
+    }
+  </style>
+  <template>
+    <p class$="{{_getTimeViewClass(isBlink, isWarn)}}">{{currentTimeStr}}</p>
+  </template>
+
+  <script>
+    const MINUTES = 60;
+
+    function sec2Min(seconds) {
+      return Math.floor(seconds / MINUTES);
+    }
+
+    function secSec(seconds) {
+      return seconds % MINUTES;
+    }
+
+    function fmtTime(time, size) {
+      return time >= 10
+        ? time.toString()
+        : '0' + time.toString()
+    }
+
+    Polymer({
+      is: "time-view",
+      properties: {
+        currentTime: {
+          type: Number,
+          value: 0
+        },
+        currentTimeStr: {
+          type: String,
+          computed: 'computeCurrentTimeStr(currentTime)'
+        },
+        isBlink: {
+          type: Boolean,
+          value: false
+        },
+        isWarn: {
+          type: Boolean,
+          value: false
+        }
+      },
+      ready: function() {
+        //this.textContent = "I'm a element"
+
+      },
+
+      computeCurrentTimeStr: function(currentTime) {
+        return fmtTime(sec2Min(currentTime))
+          + ':'
+          + fmtTime(secSec(currentTime)) ;
+      },
+
+      _getTimeViewClass: function(isBlink, isWarn) {
+        var result = [];
+        if (isBlink) {
+          result.push('blink');
+        }
+
+        if (isBlink || isWarn) {
+          result.push('warn');
+        }
+
+        return result.join(' ');
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,164 @@
+<dom-module id="pomo-app">
+  <style>
+    :host {
+      display: block;
+      background-color: #292929;
+      font-family: Roboto "Courier New" monospace;
+    }
+
+    :host.pm {
+      background-color: #ffa3b6;
+    }
+
+    :host.sb {
+      background-color: #93e8ff;
+    }
+
+    :host.lb {
+      background-color: #c0ff77;
+    }
+
+    time-view {
+      padding: 20px;
+    }
+
+  </style>
+  <template>
+    <div class="fit horizontal layout">
+      <div class="flex self-center">
+        <div class="flex vertical layout center">
+          <pomo-state id="pomoState" state="[[activeTime.type]]" pomodoro-counting="[[completedPomodoros]]"></pomo-state>
+          <time-view id="timeView" current-time="[[activeTime.remain]]" is-blink="[[_isBlink]]"></time-view>
+          <pomo-control on-play="play" on-pause="pause" on-stop="stop" on-next="next"></pomo-control>
+        </div>
+      </div>
+    </div>
+    <!-- Declarations -->
+    <sec-countdown id="countdown" current-time="{{activeTime.remain}}"></sec-countdown>
+    <pomo-alarm id="timeoutAlarm"
+                time="[[activeTime.remain]]"
+                alarm="0"
+                on-alarm="_handleTimeoutAlarm"></pomo-alarm>-
+    <pomo-alarm id="warnAlarm"
+                time="[[activeTime.remain]]"
+                alarm="60" is-triggered="{{_isBlink}}"></pomo-alarm>
+    <audio id="audioPlayer" src="../audio/stop.mp3"></audio>
+
+  </template>
+
+  <script>
+    "use strict";
+
+    const MINUTE = 60;
+
+    const STATE_POMODORO    = 'p';
+    const STATE_SHORT_BREAK = 's';
+    const STATE_LONG_BREAK  = 'l';
+
+    class State {
+      constructor(type, duration) {
+        this.type = type;
+        this.duration = duration;
+        this.remain = duration;
+      }
+    }
+
+    var pomodoroCounting = 0;
+
+    Polymer({
+      is: 'pomo-app',
+      properties: {
+        version: {
+          type: String,
+          value: '1.0.0',
+          readOnly: true
+        },
+        pomodoroDuration: {
+          type: Number,
+          value: 25 * MINUTE
+        },
+
+        shortBreakDuration: {
+          type: Number,
+          value: 5 * MINUTE
+        },
+
+        longBreakDuration: {
+          type: Number,
+          value: 15 * MINUTE
+        },
+
+        longBreakInterval: {
+          type: Number,
+          value: 4
+        },
+
+        activeTime: {
+          type: Object,
+          value: null
+        },
+
+        completedPomodoros: {
+          type: Number,
+          value: 0
+        },
+
+        _isBlink: {
+          type: Boolean,
+          value: false
+        }
+      },
+
+      ready: function() {
+        this.init();
+      },
+
+      play: function() {
+        this.$.countdown.start();
+      },
+
+      stop: function() {
+        this.$.countdown.stop();
+        this.init();
+      },
+
+      pause: function() {
+        this.$.countdown.stop();
+      },
+
+      next: function(finished) {
+        if (this.activeTime.type != STATE_POMODORO) {
+          return this.activeTime = new State(STATE_POMODORO,
+            this.pomodoroDuration);
+        }
+
+        pomodoroCounting++;
+
+        if (finished === true) {
+          this.completedPomodoros++;
+        }
+
+        if (pomodoroCounting % this.longBreakInterval == 0) {
+          return this.activeTime = new State(STATE_LONG_BREAK,
+            this.longBreakDuration);
+        }
+
+        return this.activeTime = new State(STATE_SHORT_BREAK,
+          this.shortBreakDuration);
+      },
+
+      init: function() {
+        this.activeTime = new State(STATE_POMODORO, this.pomodoroDuration);
+      },
+
+      _handleTimeoutAlarm: function(e) {
+        // Wait 1 second before change. Thank you Ana Paula Morais do Nascimento ;)
+        this.async(function() {
+          //this.setWarnMode(false);
+          this.next(true);
+        }, 1000);
+        this.$.audioPlayer.play();
+      }
+    });
+  </script>
+</dom-module>

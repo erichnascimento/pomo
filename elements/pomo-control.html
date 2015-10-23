@@ -1,0 +1,32 @@
+<dom-module id="pomo-control">
+  <style>
+    :host {
+      display: block;
+      color: #888;
+    }
+  </style>
+  <template>
+    <!-- <paper-icon-button icon="av:skip-previous"></paper-icon-button> -->
+    <paper-icon-button icon="av:play-arrow" on-click="play"></paper-icon-button>
+    <paper-icon-button icon="av:pause" on-click="pause"></paper-icon-button>
+    <paper-icon-button icon="av:stop" on-click="stop"></paper-icon-button>
+    <paper-icon-button icon="av:skip-next" on-click="next"></paper-icon-button>
+  </template>
+  <script>
+    Polymer({
+      is: 'pomo-control',
+      play: function() {
+        this.fire('play');
+      },
+      pause: function() {
+        this.fire('pause');
+      },
+      next: function() {
+        this.fire('next');
+      },
+      stop: function() {
+        this.fire('stop');
+      }
+    });
+  </script>
+</dom-module>

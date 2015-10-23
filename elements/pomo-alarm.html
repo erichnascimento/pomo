@@ -1,0 +1,40 @@
+<script>
+  Polymer({
+    is: 'pomo-alarm',
+    properties: {
+      time: {
+        type: Number,
+        value: 0
+      },
+      alarm: {
+        type: Number,
+        value: 0
+      },
+      isTriggered: {
+        type: Boolean,
+        value: false,
+        readOnly: true,
+        notify: true
+      }
+    },
+
+    observers: [
+      'checkAlarm(time, alarm)'
+    ],
+
+    checkAlarm: function(time, alarm) {
+      if (time <= alarm) {
+        if (this.isTriggered) {
+          return;
+        }
+        this.fire('alarm', {time: time});
+        this._setIsTriggered(true);
+        return;
+      }
+
+      if (this.isTriggered) {
+        this._setIsTriggered(false);
+      }
+    }
+  });
+</script>

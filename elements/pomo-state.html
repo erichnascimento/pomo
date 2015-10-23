@@ -1,0 +1,79 @@
+<dom-module id="pomo-state">
+  <style>
+    :host {
+      display: block;
+      font-size: 1.8vw;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      display: inline-block;
+      padding: .4em;
+      background-color: #383838;
+      border-radius: 50%;
+      color: #949494;
+      margin: .4em;
+    }
+
+    .active {
+      color: #FFF;
+      font-weight: bold;
+    }
+
+    .active.p {
+      background-color: red;
+    }
+
+    .active.s {
+      background-color: #004EFF;
+    }
+
+    .active.l {
+      background-color: green;
+    }
+
+    div {
+      padding: .9em;
+    }
+
+    paper-badge::shadow #badge.paper-badge {
+      width: 2em;
+      height: 2em;
+      font-size: .8em;
+    }
+  </style>
+  <template>
+    <ul>
+      <li class$="{{_activeColor(state, 'p')}}"><div>PM<paper-badge label="[[pomodoroCounting]]"></paper-badge></div></li>
+      <li class$="{{_activeColor(state, 's')}}"><div>SB</div></li>
+      <li class$="{{_activeColor(state, 'l')}}"><div>LB</div></li>
+    </ul>
+  </template>
+  <script>
+    Polymer({
+      is: 'pomo-state',
+
+      properties: {
+        state: {
+          type: String,
+          value: ''
+        },
+        pomodoroCounting: {
+          type: Number,
+          value: 0
+        }
+      },
+
+      _activeColor: function(state, ref) {
+        return state == ref
+          ? state + ' active'
+          : state;
+      }
+    });
+  </script>
+</dom-module>
