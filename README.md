@@ -6,6 +6,8 @@ Chrome browser with ES6 support **is required**.
 
 Online Demo [here](https://erichnascimento.github.io/pomo)
 
+![](https://cldup.com/sT07AF3Ut2.jpeg)
+
 ## Install
 Clone this repository and run:
 ```sh
