@@ -68,6 +68,11 @@
     Polymer({
       is: 'pomo-app',
       properties: {
+        version: {
+          type: String,
+          value: '1.0.0',
+          readOnly: true
+        },
         pomodoroDuration: {
           type: Number,
           value: 25 * MINUTE
@@ -95,8 +100,7 @@
 
         completedPomodoros: {
           type: Number,
-          value: 0,
-          readOnly: true
+          value: 0
         },
 
         _isBlink: {
@@ -131,7 +135,7 @@
         pomodoroCounting++;
 
         if (finished === true) {
-          this._setCompletedPomodoros(this.completedPomodoros + 1);
+          this.completedPomodoros++;
         }
 
         if (pomodoroCounting % this.longBreakInterval == 0) {

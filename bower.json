@@ -1,6 +1,6 @@
 {
-  "name": "pomo",
-  "version": "0.0.0",
+  "name": "POMO",
+  "version": "1.0.0",
   "authors": [
     "Erich Nascimento <erichnascimento@gmail.com>"
   ],
@@ -13,7 +13,7 @@
     "productivity"
   ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://erichnascimento.github.io/pomo",
   "ignore": [
     "**/.*",
     "node_modules",
