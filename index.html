@@ -5,13 +5,36 @@
     <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
     <link rel="import" href="elements/elements.html">
     <title>POMO</title>
+    <style media="screen">
+      #author {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        font-family: 'Roboto' Arial Helvetica;
+        font-size: .8em;
+        text-align: center;
+        color: #464646;
+        line-height: 1.5em;
+      }
+        #author a {
+          color: #415A69;
+          text-decoration: none;
+        }
+
+        #author a:hover {
+          text-decoration: underline;
+        }
+    </style>
   </head>
   <body class="fullbleed">
-    <pomo-app id="pomoApp" class="fit"
-              pomodoro-duration="1500"
-              short-break-duration="300"
-              long-break-duration="900" longBreakInterval="4">
-    </pomo-app>
+    <div class="fit layout vertical">
+      <pomo-app id="pomoApp" class="flex"
+                pomodoro-duration="1500"
+                short-break-duration="300"
+                long-break-duration="900" longBreakInterval="4">
+      </pomo-app>
+      <p id="author">POMO<br>Crafted with <3 by <a href="https://github.com/erichnascimento" target="_blank">Erich Nascimento</a></p>
+    </div>
   </body>
   <script src="js/app.js"></script>
 </html>
