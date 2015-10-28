@@ -109,6 +109,10 @@
         }
       },
 
+      observers: [
+        '_activeTimeRemainChanged(activeTime.remain)'
+      ],
+
       ready: function() {
         this.init();
       },
@@ -149,6 +153,7 @@
 
       init: function() {
         this.activeTime = new State(STATE_POMODORO, this.pomodoroDuration);
+        this._updateTitle(false);
       },
 
       _handleTimeoutAlarm: function(e) {
@@ -158,6 +163,18 @@
           this.next(true);
         }, 1000);
         this.$.audioPlayer.play();
+      },
+
+      _activeTimeRemainChanged: function(changeRecord) {
+        this._updateTitle(true);
+      },
+
+      _updateTitle: function(running) {
+        var title = 'POMO ' + this.version;
+        if (running) {
+          title +=  ' (' + this.$.timeView.currentTimeStr + ')';
+        }
+        document.title = title;
       }
     });
   </script>
