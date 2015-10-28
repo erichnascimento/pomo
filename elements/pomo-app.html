@@ -28,7 +28,7 @@
       <div class="flex self-center">
         <div class="flex vertical layout center">
           <pomo-state id="pomoState" state="[[activeTime.type]]" pomodoro-counting="[[completedPomodoros]]"></pomo-state>
-          <time-view id="timeView" current-time="[[activeTime.remain]]" is-blink="[[_isBlink]]"></time-view>
+          <time-view id="timeView" current-time="[[activeTime.remain]]" is-blink="[[_isBlink]]" is-warn="[[_isBlink]]"></time-view>
           <pomo-control on-play="play" on-pause="pause" on-stop="stop" on-next="next"></pomo-control>
         </div>
       </div>

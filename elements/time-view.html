@@ -5,28 +5,24 @@
       font-size: 20vw;
       font-weight: bold;
       color: #D6D6D6;
+      transition: opacity 0;
     }
 
     p {
       margin: 0;
     }
 
-    .blink {
-      animation: blink 1s steps(5, start) infinite;
-    }
-
     .warn {
       color: orange;
     }
 
-    @keyframes blink {
-      to {
-        visibility: hidden;
-      }
+    :host.hide {
+      opacity: 0;
+      transition: opacity .2s ease-in-out;
     }
   </style>
   <template>
-    <p class$="{{_getTimeViewClass(isBlink, isWarn)}}">{{currentTimeStr}}</p>
+    <p class$="{{_getTimeViewClass(isWarn)}}">{{currentTimeStr}}</p>
   </template>
 
   <script>
@@ -51,7 +47,8 @@
       properties: {
         currentTime: {
           type: Number,
-          value: 0
+          value: 0,
+          observer: '_currentTimeChanged'
         },
         currentTimeStr: {
           type: String,
@@ -59,7 +56,8 @@
         },
         isBlink: {
           type: Boolean,
-          value: false
+          value: false,
+          observer: '_isBlinkChanged'
         },
         isWarn: {
           type: Boolean,
@@ -77,18 +75,41 @@
           + fmtTime(secSec(currentTime)) ;
       },
 
-      _getTimeViewClass: function(isBlink, isWarn) {
-        var result = [];
-        if (isBlink) {
-          result.push('blink');
+      _getTimeViewClass: function(isWarn) {
+        return isWarn ? 'warn' : '';
+      },
+
+      _currentTimeChanged: function(newValue, oldValue) {
+        this._blink();
+      },
+
+      _isBlinkChanged: function (n, o) {
+        this._blink();
+      },
+
+      _showJob: null,
+      _hideJob: null,
+
+      _blink: function() {
+        if (!this.isBlink) {
+          this.cancelAsync(this._hideJob);
+          this.cancelAsync(this._showJob);
+          this.toggleClass('hide', false);
+
+          return;
         }
 
-        if (isBlink || isWarn) {
-          result.push('warn');
-        }
+        this._hideJob = this.async(function() {
+          if (this.isBlink) {
+            this.toggleClass('hide', true);
+          }
+        }, 500);
 
-        return result.join(' ');
+        this._showJob = this.async(function() {
+          this.toggleClass('hide', false);
+        }, 1000);
       }
+
     });
   </script>
 </dom-module>
